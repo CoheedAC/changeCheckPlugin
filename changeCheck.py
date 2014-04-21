@@ -66,8 +66,8 @@ def analyze(module, targetPath): #takes module argument and path to a scratch fi
                                 l.sprites[spriteName][0].remove(stuff)
                 if (len(sprite.costumes) < numCostumes): #checks to see if costumes are created or deleted
                     results.append(spriteName +":Costumes Deleted")
-                if (len(sprite.costumes)  == numCostumes):
-                    results.append(spriteName+":Same number of costumes")
+                #if (len(sprite.costumes)  == numCostumes):
+                    #results.append(spriteName+":Same number of costumes")
                 if (len(sprite.costumes) > numCostumes):
                     results.append(spriteName +"Costumes Added")
     c = classes[module]()
