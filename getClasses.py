@@ -24,13 +24,14 @@ def main():
             writeList.append('    spriteCount='+str(spriteCount)+'\n')
             writeList.append('    sprites={')
             spriteCount = len(oct.sprites)
-            for sprite in oct.sprites:
-                costumeCount = len(sprite.costumes)
+            for sprite in oct.sprites: #iterates through each sprite
+                costumeCount = len(sprite.costumes) #gets # of costumes
                 spriteList[sprite.name] = ([],[])
                 spriteCostumes[sprite.name] = costumeCount
                 if len(sprite.scripts) != 0:
                     for script in sprite.scripts:
-                        spriteList[sprite.name][0].append(repr(script.stringify()))
+                        if not isinstance(script, kurt.Comment):
+                            spriteList[sprite.name][0].append(repr(script.stringify()))
             for name, lister in spriteList.items():
                 writeList.append('"'+name+'":[[')
                 writeList.append(',\n    '.join((lister[0])))
@@ -39,13 +40,13 @@ def main():
             writeList.append('}')
             writeList[-2]= writeList[-2][0:-6]
             if (name == "AnimalRace" or "DanceParty"):
-                writeList.append('\naddOkay=True')
+                writeList.append('\n    addOkay=True')
             else:
                 writeList.append('\n    addOkay=False')
     if not os.path.exists('projectClasses.py'):
-        with open ('projectClasses.py', "w") as fp:
+        with open ('projectClasses.py', "w") as fp: #prints out classes
             fp.write(''.join(writeList))
-    with open (argv[0]+'import.txt', "w") as fp:
+    with open (argv[0]+'import.txt', "w") as fp: #prints a list of classes to be added to the "classes" dict
         fp.write('{' + ','.join(importList)+'}')
         
 if __name__ == "__main__":
