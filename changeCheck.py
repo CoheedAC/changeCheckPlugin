@@ -24,8 +24,13 @@ def main():
             print("\nError: File not found")
             return 1
         module = argv[0]
-        targetPath = argv[1]
-        analyzeSingleFile(module, targetPath)
+        for key , objs in classes.items():
+            if key == module:
+                targetPath = argv[1]
+                analyzeSingleFile(module, targetPath)
+                return 0 
+        print("\nError: Module not found.")
+        return 1
     if opt.student: #analyze multiple scratch files (directory)
         if os.path.exists(os.path.abspath(os.path.dirname(argv[1]))+'\\results\\output.html'):
             print("\nPlease remove the output.html file or rename it before running the check again")
