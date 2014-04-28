@@ -66,7 +66,7 @@ def analyze(module, targetPath): #takes module argument and path to a scratch fi
             scriptText = spriteTuple[0]
             numCostumes = spriteTuple[1]
             results[spriteName] = {}
-            results[spriteName]['unchangedScripts'] = 0
+            #results[spriteName]['unchangedScripts'] = 0
             additions = 0
             unchanged = 0
             for sprite in oct.sprites: #for all sprites in the student's project
@@ -87,9 +87,12 @@ def analyze(module, targetPath): #takes module argument and path to a scratch fi
                         else:
                             sprite.scripts.remove(script)
                     results[spriteName]['scriptDeletions'] = len(l.sprites[spriteName][0]) - len(sprite.scripts)
-                    results[spriteName].update({'unchangedScripts': unchanged}) #writes out # of unchanged scripts
+                    #results[spriteName].update({'unchangedScripts': unchanged}) #writes out # of unchanged scripts
                     results[spriteName]['scriptsWithAdditions'] = additions #writes out # of scripts with additions
                     results[spriteName]['deletedCostumes'] = numCostumes - len(sprite.costumes) #writes out the number of deleted costumes
+        results[spriteName]['nochanges'] = False
+        if (unchanged == len(l.sprites[spriteName][0])):
+            results[spriteName]['nochanges'] = True
     return results    
 def analyzeSingleFile(module, targetFile):
     resultsDict = {}
@@ -118,7 +121,7 @@ def analyzeDirectoryOfStudentProjects(module, targetDirectory):
         results[directory] = analyzeMultipleSnaps(module, targetDirectory+'\\'+directory)
     for student, data in results.items():
         numStudents += 1
-        changes = False
+        changes = True
         delCostume = False
         addScript  = False
         delScript = False
@@ -128,15 +131,15 @@ def analyzeDirectoryOfStudentProjects(module, targetDirectory):
                     delSprite = True
             del projectResults['DeletedSprites']
             for sprite, dictionary in projectResults.items():
-                if dictionary['unchangedScripts'] != 0:
-                    changes = True
+                if dictionary['nochanges'] == False:
+                    changes = False
                 if dictionary['deletedCostumes'] != 0:
                     delCostume = True
                 if dictionary['scriptsWithAdditions'] != 0:
                     addScript = True
                 if dictionary['scriptDeletions'] != 0:
                     delScript = True
-        if changes == True:
+        if changes == False:
             madeChanges+=1 
         if delCostume == True:
             deletedCostume +=1
@@ -146,8 +149,9 @@ def analyzeDirectoryOfStudentProjects(module, targetDirectory):
             deletedScript +=1
         if delSprite == True:
             deletedSprite +=1
-    resultsDict = {'added':added, 'costumeDeleted':deletedCostume, 'scriptDeleted':deletedScript, 'spritesDeleted':deletedSprite, 'nochanges':(numStudents-madeChanges),
-                   'numstudents': numStudents}
+    #print madeChanges
+    resultsDict = {'added':added, 'costumeDeleted':deletedCostume, 'scriptDeleted':deletedScript, 'spritesDeleted':deletedSprite,
+                   'numstudents': numStudents,'nochanges':(numStudents-madeChanges)}
     stats_out(resultsDict, targetDirectory)
 def html_out(resultsDict, outpath):
     if not os.path.exists(outpath+'\\results'):
